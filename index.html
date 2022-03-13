@@ -124,7 +124,7 @@
             <div class="card">
               <img src="img/3.jpg" class="card-img-top" alt="3" />
               <div class="card-body">
-                <p class="card-text">Walllpapers</p>
+                <p class="card-text">Dapat dijadikan sebagai wallpaper desktop</p>
               </div>
             </div>
           </div>
@@ -153,20 +153,31 @@
             </div>
             <div class="row justify-content-center">
                 <div class="col-md-8">
-                    <form>
+
+                  <div class="alert alert-success alert-dismissible fade show d-none my-alert" role="alert">
+                    <strong>Terima Kasih!</strong> Pesan anda telah diterima.
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                  </div>
+
+                    <form name="contact-form">
                         <div class="mb-3">
                           <label for="name" class="form-label">Nama Lengkap</label>
-                          <input type="text" class="form-control" id="name" aria-describedby="name">             
+                          <input type="text" class="form-control" id="name" aria-describedby="name" name="nama">             
                         </div>
                         <div class="mb-3">
                           <label for="email" class="form-label">Email</label>
-                          <input type="email" class="form-control" id="email" aria-describedby="email">
+                          <input type="email" class="form-control" id="email" aria-describedby="email" name="email">
                         </div>
                         <div class="mb-3">
                             <label for="pesan" class="form-label">Pesan</label>
-                            <textarea class="form-control" id="pesan" rows="3"></textarea>
+                            <textarea class="form-control" id="pesan" rows="3" name="pesan"></textarea>
                           </div>
-                        <button type="submit" class="btn btn-primary">Submit</button>
+                        <button type="submit" class="btn btn-primary btn-kirim">Submit</button>
+
+                        <button class="btn btn-primary btn-loading d-none" type="button" disabled>
+                          <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                          Loading...
+                        </button>
                       </form>
                 </div>
             </div>
@@ -182,5 +193,34 @@
     <!-- Akhir Footer -->
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
+
+    <script>
+      const scriptURL = 'https://script.google.com/macros/s/AKfycbxaTPRVXJj_9ycEKjlvs8QsIooBpXG48kI2YvhQ-SqHdNTXJaY523mnFoHoGBhyndl2/exec'
+      const form = document.forms['contact-form'];
+      const btnKirim=document.querySelector('.btn-kirim');
+      const btnLoading=document.querySelector('.btn-loading');
+      const MyAlert=document.querySelector('.my-alert');
+    
+      form.addEventListener('submit', e => {
+        e.preventDefault();
+        // Ketika tombol submit di klik
+        // tampilkan tombol loading, hilangkan tombol kirim
+        btnLoading.classList.toggle('d-none');
+        btnKirim.classList.toggle('d-none');
+
+        fetch(scriptURL, { method: 'POST', body: new FormData(form)})
+          .then(response => { 
+            // tampilkan tombol kirim, hilangkan tombol loading
+            btnLoading.classList.toggle('d-none');
+            btnKirim.classList.toggle('d-none');
+            // tampilkan alert
+            MyAlert.classList.toggle('d-none');
+            // reset formnya
+            form.reset();
+            console.log('Success!', response);
+          })
+          .catch(error => console.error('Error!', error.message))
+      })
+    </script>
   </body>
 </html>
